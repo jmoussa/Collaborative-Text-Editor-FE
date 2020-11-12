@@ -1,6 +1,6 @@
 import NavBar from './components/NavBar'
 import Home from './components/Home'
-import Editor from './components/Editor'
+import TextEditor from './components/Editor'
 
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom'
 
@@ -12,7 +12,7 @@ function App() {
             <hr/> 
             <Switch> 
               <Route exact path="/" component={Home}/>
-              <Route path="/editor" component={Editor}/>
+              <Route path="/editor" component={TextEditor}/>
             </Switch>
           </div>
         </Router>             
