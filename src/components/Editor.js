@@ -14,9 +14,10 @@ class TextEditor extends React.Component {
     this.state = {
       ...props,
       "username": "test_username",
-      editorState,
+      editorState
     };
     this._onEditorChange = this._onEditorChange.bind(this);
+    this._onWebsocketRecv = this._onWebsocketRecv.bind(this);
   }
 
   _onEditorChange(editorState, newText=null) {
@@ -32,13 +33,27 @@ class TextEditor extends React.Component {
     }
   }
   
+  _onWebsocketRecv(editorState, newText=null) {
+    const content = editorState.getCurrentContent();
+    if(newText == null ){
+      console.log("New Text is null, getting from content")
+      newText = content.getPlainText();
+    }
+    if(typeof newText === 'string' || newText instanceof String){
+      this.componentRecievedNewText({"text": newText})
+      //this.setState({
+          //editorState,
+          //text: newText // update state with new text whenever editor changes
+      //});
+    }
+  }
+
   componentWillMount() {
     client.onopen = () => {
       console.log('WebSocket Client Connected');
     };
     client.onmessage = (new_text) => {
-      console.log("RECIEVED: " + JSON.stringify(new_text.data, null, '\t'))
-      this._onEditorChange(this.state.editorState, new_text)
+      this._onWebsocketRecv(this.state.editorState, JSON.stringify(new_text.data, null, '\t'))
     };
     client.onerror = (err) => {
       console.log("ERROR: " + err)
@@ -48,12 +63,14 @@ class TextEditor extends React.Component {
     };
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentRecievedNewText(nextProps) {
+    console.log("NEW TEXT... comparing")
     const { editorState, text} = this.state;
     const nextText = nextProps.text;
-    if (text !== nextText) {   // check that text has changed before updating the editor
+    if (text !== nextText && nextText.trim() !== "") {   // check that text has changed before updating the editor
+      console.log("Setting text as: " + nextText.slice(0,-1))
       const selectionState = editorState.getSelection();            
-      const newContentState = ContentState.createFromText(nextProps.text);            
+      const newContentState = ContentState.createFromText(nextProps.text.slice(0,-1));            
       const newEditorState = EditorState.create({
               currentContent: newContentState,
               selection: selectionState  // make sure the new editor has the old editor's selection state
