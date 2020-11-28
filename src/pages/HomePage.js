@@ -1,6 +1,6 @@
 import React from 'react'
-import Login from './Login.js'
-import UserHome from './UserHome.js'
+import Login from '../components/Login.js'
+import UserHome from '../components/UserHome.js'
 
 class Home extends React.Component {
     constructor(props) {

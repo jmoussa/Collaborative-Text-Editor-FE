@@ -1,6 +1,6 @@
 import NavBar from './components/NavBar'
-import Home from './components/Home'
-import TextEditor from './components/Editor'
+import HomePage from './pages/HomePage'
+import EditorPage from './pages/EditorPage'
 
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom'
 
@@ -9,10 +9,9 @@ function App() {
         <Router>
           <div>
             <NavBar/> 
-            <hr/> 
             <Switch> 
-              <Route exact path="/" component={Home}/>
-              <Route path="/editor" component={TextEditor}/>
+              <Route exact path="/" component={HomePage}/>
+              <Route path="/editor" component={EditorPage}/>
             </Switch>
           </div>
         </Router>             
